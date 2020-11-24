@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
 
-//import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+
+import { startNewGame } from "../redux/slices/gameSlice";
 
 import { ClickableText, LargeButton } from "./Components";
 
@@ -20,7 +22,8 @@ const diffMap = {
   hard: "3",
 };
 
-const NewGame = () => {
+const NewGame = ({ name, playerId}) => {
+  const dispatch = useDispatch();
   const [difficulty, setDifficulty] = useState("2");
 
   const handleDifficulty = (evt) => {
@@ -28,8 +31,7 @@ const NewGame = () => {
   };
 
   const handleNewGame = () => {
-    //TODO
-    console.log("new game");
+    dispatch(startNewGame(difficulty, name, playerId))
   };
 
   return (

@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 const passport = require("./passport/setup");
 const auth = require("./routes/auth");
 const game = require("./routes/game");
+const user = require("./routes/user");
 const MONGO_URI = `mongodb+srv://emorobot:${process.env.MONGO_PASSWORD}@game-files.zzpfd.mongodb.net/game-files?retryWrites=true&w=majority`
 
 mongoose
@@ -36,6 +37,7 @@ app.use(passport.session());
 
 app.use("/api/auth", auth);
 app.use("/api/game", game);
+app.use("/api/user", user);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));

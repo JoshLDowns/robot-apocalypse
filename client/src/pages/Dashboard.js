@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled/macro";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import { getUserGame } from "../redux/slices/gameSlice";
 import { signout } from "../redux/slices/userSlice";
 
 import { ClickableText, CenterDiv } from "../styled-components/Components";
@@ -47,8 +48,11 @@ const OptionsMenu = ({ open, handleLogout, handleSave }) => {
 const Dashboard = () => {
   const dispatch = useDispatch();
   const [optionsOpen, setOptionsOpen] = useState(false);
+
   const user = useSelector((state) => state.user.username);
+  const playerId = useSelector((state) => state.user.id);
   const active = useSelector((state) => state.user.activeGame);
+  const isGameLoading = useSelector((state) => state.game.isLoading);
 
   const handleOptions = () => {
     setOptionsOpen(!optionsOpen);
@@ -84,7 +88,7 @@ const Dashboard = () => {
         <br />
         <br />
         <br />
-        <NewGame />
+        <NewGame name={user} playerId={playerId}/>
       </CenterDiv>
     </>
   );

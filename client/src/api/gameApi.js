@@ -1,17 +1,17 @@
 import axios from "axios";
 
-export const authenticateUser = async (username, password, type) => {
+export const newGame = async (difficulty, name, playerId) => {
   const response = { status: "", data: null, error: null };
   await axios
-    .post("/api/auth/register_login", {
-      username: username,
-      password: password,
-      type: type,
+    .post("/api/game/new", {
+      difficulty: difficulty,
+      name: name,
+      playerId: playerId
     })
     .then((res) => {
       console.log(res);
       response.status = "ok";
-      response.data = res.data.user;
+      response.data = res.data;
     })
     .catch((err) => {
       console.log(err.response.data)
@@ -19,28 +19,30 @@ export const authenticateUser = async (username, password, type) => {
       response.error = err.response.data.info ? err.response.data.info.message : err.response.data.errors;
     });
   return response;
-};
-
-export const logout = async () => {
-  const response = { status: "", error: null }
-  await axios
-    .get("/api/auth/signout")
-    .then((_res) => {
-      response.status = "ok"
-    })
-    .catch((err) => {
-      response.status = "error";
-      response.error = err.toString();
-    })
-    return response;
 }
 
-export const updateUser = async (id, field, value) => {
+export const getGame = async (id) => {
   const response = { status: "", data: null, error: null };
   await axios
-    .patch(`/api/user/${id}/update`, {
-      field: field,
-      value: value,
+    .get(`/api/game/${id}`)
+    .then((res) => {
+      console.log(res);
+      response.status = "ok";
+      response.data = res.data;
+    })
+    .catch((err) => {
+      console.log(err.response.data)
+      response.status = "error";
+      response.error = err.response.data.info ? err.response.data.info.message : err.response.data.errors;
+    });
+  return response;
+}
+
+export const getValidInput = async (input) => {
+  const response = { status: "", data: null, error: null };
+  await axios
+    .post("/api/game/find", {
+      input: input
     })
     .then((res) => {
       console.log(res);

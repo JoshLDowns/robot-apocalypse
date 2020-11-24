@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authenticateUser, logout } from "../../api/userApi";
+import { authenticateUser, logout, updateUser } from "../../api/userApi";
 import { navigate } from "@reach/router";
 
 let initialState = {
   isLoading: false,
+  isUpdateLoading: false,
   isLoggedIn: false,
   id: null,
   username: null,
@@ -14,6 +15,10 @@ let initialState = {
 const startLoading = (state) => {
   state.isLoading = true;
 };
+
+const startUpdate = (state) => {
+  state.isUpdateLoading = true;
+}
 
 const loadingFailed = (state, action) => {
   const { error } = action.payload;
@@ -26,9 +31,11 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setIsLoading: startLoading,
+    setUpdateLoading: startUpdate,
     setAuthenticateSuccess(state, action) {
       let { user } = action.payload;
       state.isLoading = false;
+      state.isUpdateLoading = false;
       state.isLoggedIn = true;
       state.id = user["_id"];
       state.username = user.username;
@@ -55,6 +62,7 @@ const userSlice = createSlice({
 
 export const {
   setIsLoading,
+  setUpdateLoading,
   setAuthenticateSuccess,
   setActiveGame,
   clearErrors,
@@ -102,3 +110,16 @@ export const signout = () => async (dispatch) => {
     dispatch(setFailure({ error: err.toString() }));
   }
 };
+
+export const patchUser = (id, field, value) => async (dispatch) => {
+  try {
+    dispatch(setUpdateLoading());
+    const user = await updateUser(id, field, value);
+    if (user.error) {
+      throw user.error;
+    }
+    dispatch(setAuthenticateSuccess({ user: user.data }));
+  } catch (err) {
+    dispatch(setFailure({ error: err.toString() }));
+  }
+}
