@@ -1,15 +1,21 @@
 import React from "react";
 import { Global, css } from "@emotion/react/macro";
 //import Helmet from "react-helmet";
-//import Header from "./header";
-//import Footer from "./footer";
+import Footer from "./Footer";
+
+/*
+* Palette
+ #29d409 green
+ #d40929 red
+ #d4098f purple
+*/
 
 const Layout = ({ children }) => {
-
   return (
     <>
       <Global
         styles={css`
+          @import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
           * {
             box-sizing: border-box;
             margin: 0;
@@ -20,11 +26,11 @@ const Layout = ({ children }) => {
             margin: 0;
             width: 100vw;
             overflow-x: hidden;
-            background-color: #848FA5;
-            color: #555;
-            font-family: --apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-              Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-              sans-serif;
+            background-color: black;
+            color: #29d409;
+            font-family: "syne mono", --apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 18px;
             line-height: 1.4;
 
@@ -40,21 +46,21 @@ const Layout = ({ children }) => {
           h4,
           h5,
           h6 {
-            color: black;
+            color: #29d409;
             line-height: 1.1;
-            /* font-family: "Reem Kufi"; */
+            font-family: "syne mono";
             + * {
               margin-top: 0.5rem;
             }
           }
 
           p {
-            font-family: Montserrat;
-            color: black;
+            font-family: "syne mono";
+            color: #29d409;
           }
 
           strong {
-            color: black;
+            color: #29d409;
           }
         `}
       />
@@ -63,10 +69,9 @@ const Layout = ({ children }) => {
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet> */}
-      {/* <Header /> */}
       <main
         css={css`
-          margin: 72px auto 0;
+          margin: 0 auto;
           position: relative;
           width: 100%;
           height: fit-content;
@@ -80,7 +85,7 @@ const Layout = ({ children }) => {
         `}
       >
         {children}
-        {/* <Footer /> */}
+        <Footer />
       </main>
     </>
   );

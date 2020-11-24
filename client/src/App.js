@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Router, Redirect } from "@reach/router";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { signout } from "./redux/slices/userSlice";
-
-import MainLayout from "./styled-components/MainLayout";
 import Authenticate from "./pages/Authenticate";
+import Dashboard from "./pages/Dashboard";
+import MainLayout from "./styled-components/MainLayout";
 
 const App = () => {
-  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const handleLogout = () => {
-    dispatch(signout())
-  }
-  console.log(isLoggedIn);
+  
   if (!isLoggedIn) {
     return (
       <MainLayout>
-        <Authenticate />
+        <Redirect noThrow to="/login" />
+        <Router>
+          <Authenticate path="/login" />
+        </Router>
       </MainLayout>
     )
   }
 
   return (
     <MainLayout>
-      <h1>Authenticated!!!!</h1>
-      <button onClick={handleLogout}>Log Out</button>
+      <Router>
+        <Dashboard path="/" />
+      </Router>
     </MainLayout>
   );
 }

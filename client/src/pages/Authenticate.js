@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useAuthenticateForm } from "../hooks/useAuthenticateForm";
 
-import { authenticate } from "../redux/slices/userSlice";
+import { authenticate, clearErrors } from "../redux/slices/userSlice";
 
 import {
   AuthenticateInput,
@@ -40,13 +40,22 @@ const Authenticate = () => {
 
   return (
     <CenterDiv>
+      <h1
+        style={{
+          fontSize: "3rem",
+          marginBottom: "50px",
+        }}
+      >
+        ROBOT APOCALYPSE
+      </h1>
       <form
         onSubmit={handleSubmit}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          width: "500px",
+          width: "90vw",
+          maxWidth: "500px",
         }}
       >
         <AuthenticateInput
@@ -93,7 +102,12 @@ const Authenticate = () => {
         </LargeButton>
       </form>
       <br />
-      <SmallButton onClick={() => setIsLoggingIn(!isLoggingIn)}>
+      <SmallButton
+        onClick={() => {
+          dispatch(clearErrors());
+          setIsLoggingIn(!isLoggingIn);
+        }}
+      >
         {isLoggingIn ? "Not a member? Sign Up!" : "Already a member? Log In!"}
       </SmallButton>
     </CenterDiv>

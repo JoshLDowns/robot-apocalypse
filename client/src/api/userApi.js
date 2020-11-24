@@ -32,4 +32,5 @@ export const logout = async () => {
       response.status = "error";
       response.error = err.toString();
     })
+    return response;
 }

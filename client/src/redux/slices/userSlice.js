@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { authenticateUser, logout } from "../../api/userApi";
+import { navigate } from "@reach/router";
 
 let initialState = {
   isLoading: false,
@@ -37,6 +38,9 @@ const userSlice = createSlice({
     setActiveGame(state) {
       state.activeGame = !state.activeGame;
     },
+    clearErrors(state) {
+      state.error = null;
+    },
     setUserLoggedOut(state) {
       state.isLoading = false;
       state.isLoggedIn = false;
@@ -53,6 +57,7 @@ export const {
   setIsLoading,
   setAuthenticateSuccess,
   setActiveGame,
+  clearErrors,
   setUserLoggedOut,
   setFailure,
 } = userSlice.actions;
@@ -72,10 +77,12 @@ export const authenticate = (
       throw new Error("Passwords must match!");
     }
     const user = await authenticateUser(username, password, type);
+    console.log(user);
     if (user.error) {
       throw user.error;
     }
     dispatch(setAuthenticateSuccess({ user: user.data }));
+    navigate("/");
   } catch (err) {
     dispatch(setFailure({ error: err.toString() }));
   }
@@ -85,10 +92,12 @@ export const signout = () => async (dispatch) => {
   try {
     dispatch(setIsLoading());
     const status = await logout();
+    console.log(status);
     if (status.error) {
       throw status.error;
     }
     dispatch(setUserLoggedOut());
+    navigate("/login")
   } catch (err) {
     dispatch(setFailure({ error: err.toString() }));
   }

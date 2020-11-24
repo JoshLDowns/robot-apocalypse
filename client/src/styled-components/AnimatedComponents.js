@@ -14,8 +14,8 @@ const spin = keyframes`
 `;
 
 export const SmallSpinLoader = styled("div")`
-  border: 7px solid #4c4c47;
-  border-top: 7px solid #c14953;
+  border: 7px solid #d4098f ;
+  border-top: 7px solid #29d409;
   border-radius: 50%;
   width: 30px;
   height: 30px;

@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const User = require("../models/users");
 
 router.post("/register_login", (req, res, next) => {
   passport.authenticate("local", function (err, user, info) {
@@ -21,7 +20,6 @@ router.post("/register_login", (req, res, next) => {
 });
 
 router.get("/signout", (req, res) => {
-  console.log(req.session)
   req.session.destroy();
   req.logOut();
   return res.status(200).json({ success: "successfully signed out"})
