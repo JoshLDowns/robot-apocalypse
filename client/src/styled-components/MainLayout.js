@@ -1,7 +1,22 @@
 import React from "react";
 import { Global, css } from "@emotion/react/macro";
+import styled from "@emotion/styled/macro";
 //import Helmet from "react-helmet";
 import Footer from "./Footer";
+
+const Main = styled("main")`
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  @media (max-width: 960px) {
+    margin: 60px auto 0;
+  }
+`;
 
 /*
 * Palette
@@ -15,7 +30,7 @@ const Layout = ({ children }) => {
     <>
       <Global
         styles={css`
-          @import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
+          @import url("https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap");
           * {
             box-sizing: border-box;
             margin: 0;
@@ -69,24 +84,11 @@ const Layout = ({ children }) => {
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet> */}
-      <main
-        css={css`
-          margin: 0 auto;
-          position: relative;
-          width: 100%;
-          height: fit-content;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          overflow: hidden;
-          @media (max-width: 960px) {
-            margin: 60px auto 0;
-          }
-        `}
+      <Main
       >
         {children}
         <Footer />
-      </main>
+      </Main>
     </>
   );
 };

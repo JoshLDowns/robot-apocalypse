@@ -21,3 +21,12 @@ export const SmallSpinLoader = styled("div")`
   height: 30px;
   animation: ${spin} 2s linear infinite;
 `;
+
+export const LargeSpinLoader = styled("div")`
+  border: 20px solid #d4098f ;
+  border-top: 20px solid #29d409;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  animation: ${spin} 2s linear infinite;
+`

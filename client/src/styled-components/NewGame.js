@@ -4,6 +4,7 @@ import styled from "@emotion/styled/macro";
 import { useDispatch } from "react-redux";
 
 import { startNewGame } from "../redux/slices/gameSlice";
+import { patchUser } from "../redux/slices/userSlice";
 
 import { ClickableText, LargeButton } from "./Components";
 
@@ -31,7 +32,8 @@ const NewGame = ({ name, playerId}) => {
   };
 
   const handleNewGame = () => {
-    dispatch(startNewGame(difficulty, name, playerId))
+    dispatch(startNewGame(difficulty, name, playerId));
+    dispatch(patchUser(playerId, "active_game", true))
   };
 
   return (

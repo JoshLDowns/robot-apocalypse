@@ -82,3 +82,11 @@ export const ClickableText = styled("p")`
     cursor: pointer;
   }
 `
+
+export const DisplayTextPurp = styled("p")`
+  font-size: 1.25rem;
+  font-family: "syne mono";
+  color: #d4098f;
+  margin: 0;
+  padding: 0;
+`

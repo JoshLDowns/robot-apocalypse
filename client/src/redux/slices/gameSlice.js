@@ -12,6 +12,8 @@ let initialState = {
   rooms: null,
   gameLog: null,
   status: null,
+  playing: false,
+  paused: false,
   error: null,
 };
 
@@ -54,6 +56,27 @@ const gameSlice = createSlice({
     updateTime(state) {
       state.timePlayed = state.timePlayed + 1;
     },
+    setPlaying(state) {
+      state.playing = !state.playing;
+    },
+    setPaused(state) {
+      state.paused = !state.paused;
+    },
+    clearGame(state) {
+      state.isLoading = false;
+      state.id = null;
+      state.dateStarted = null;
+      state.playerId = null;
+      state.timePlayed = null;
+      state.score = null;
+      state.player = null;
+      state.rooms = null;
+      state.gameLog = null;
+      state.status = null;
+      state.playing = false;
+      state.paused = false;
+      state.error = null;
+    },
     setFailure: loadingFailed,
   },
 });
@@ -64,6 +87,9 @@ export const {
   getGameFailure,
   updateScore,
   updateTime,
+  setPlaying,
+  setPaused,
+  clearGame,
   setFailure,
 } = gameSlice.actions;
 
@@ -78,6 +104,7 @@ export const startNewGame = (difficulty, name, playerId) => async (
     if (game.error) {
       throw game.error;
     }
+    dispatch(setPlaying());
     dispatch(getGameSuccess({ game: game.data }));
   } catch (err) {
     dispatch(setFailure({ error: err.toString() }));

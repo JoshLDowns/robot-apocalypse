@@ -3,12 +3,20 @@ import styled from "@emotion/styled/macro";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { getUserGame } from "../redux/slices/gameSlice";
+import {
+  getUserGame,
+  clearGame,
+  setPlaying,
+  setPaused,
+  updateTime,
+} from "../redux/slices/gameSlice";
 import { signout } from "../redux/slices/userSlice";
 
 import { ClickableText, CenterDiv } from "../styled-components/Components";
+import { LargeSpinLoader } from "../styled-components/AnimatedComponents";
 
-import NewGame from "../styled-components/NewGame.js";
+import Landing from "./Landing";
+import Clock from "../styled-components/Clock";
 
 const TopBar = styled("div")`
   width: 100%;
@@ -36,10 +44,10 @@ const ListWrapper = styled("div")`
   text-align: right;
 `;
 
-const OptionsMenu = ({ open, handleLogout, handleSave }) => {
+const OptionsMenu = ({ open, handleLogout, handleSave, playing }) => {
   return (
     <ListWrapper open={open}>
-      <ListOption onClick={handleSave}>~ save game</ListOption>
+      {playing && <ListOption onClick={handleSave}>~ save game</ListOption>}
       <ListOption onClick={handleLogout}>~ logout</ListOption>
     </ListWrapper>
   );
@@ -48,24 +56,73 @@ const OptionsMenu = ({ open, handleLogout, handleSave }) => {
 const Dashboard = () => {
   const dispatch = useDispatch();
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const [timer, setTimer] = useState(null);
+  const [activeGame, setActiveGame] = useState(false);
 
   const user = useSelector((state) => state.user.username);
   const playerId = useSelector((state) => state.user.id);
   const active = useSelector((state) => state.user.activeGame);
   const isGameLoading = useSelector((state) => state.game.isLoading);
+  const playing = useSelector((state) => state.game.playing);
+  const paused = useSelector((state) => state.game.paused);
 
   const handleOptions = () => {
     setOptionsOpen(!optionsOpen);
+    dispatch(setPaused());
   };
 
   const handleLogout = () => {
+    dispatch(clearGame());
     dispatch(signout());
+  };
+
+  const handleContinue = () => {
+    dispatch(setPlaying());
+    console.log("continue");
   };
 
   const handleSave = () => {
     //TODO
     console.log("saving");
   };
+
+  useEffect(() => {
+    if (active) {
+      dispatch(getUserGame(playerId));
+    }
+    //eslint-disable-next-line
+  }, []);
+
+  //These two use effects handle pausing and not pausing the game
+  useEffect(() => {
+    if (playing && !paused && !activeGame) {
+      const interval = setInterval(() => {
+        dispatch(updateTime())
+      }, 1000)
+      setTimer(interval)
+      setActiveGame(true);
+    }
+    return () => {
+      console.log("clearing")
+      clearInterval(timer)
+    }
+  }, [playing, paused, activeGame, timer, dispatch])
+
+  useEffect(() => {
+    if (playing && paused && activeGame) {
+      setActiveGame(false)
+      setTimer(null)
+      clearInterval(timer)
+    }
+  }, [playing, paused, timer, activeGame])
+
+  if (isGameLoading) {
+    return (
+      <CenterDiv>
+        <LargeSpinLoader />
+      </CenterDiv>
+    );
+  }
 
   return (
     <>
@@ -79,16 +136,19 @@ const Dashboard = () => {
           open={optionsOpen}
           handleLogout={handleLogout}
           handleSave={handleSave}
+          playing={playing}
         />
-        {active ? (
-          <h1>{`Welcome back to the apocalypse ${user}...`}</h1>
-        ) : (
-          <h1>{`Welcome to the apocalypse ${user}...`}</h1>
+        {!playing && (
+          <Landing
+            active={active}
+            user={user}
+            playerId={playerId}
+            handleContinue={handleContinue}
+          />
         )}
-        <br />
-        <br />
-        <br />
-        <NewGame name={user} playerId={playerId}/>
+        {playing && (
+          <Clock />
+        )}
       </CenterDiv>
     </>
   );
