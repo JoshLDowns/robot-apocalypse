@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   getUserGame,
+  saveUserGame,
   clearGame,
   setPlaying,
   setPaused,
@@ -45,9 +46,23 @@ const ListWrapper = styled("div")`
 `;
 
 const OptionsMenu = ({ open, handleLogout, handleSave, playing }) => {
+  const gameId = useSelector((state) => state.game.id);
+  const timePlayed = useSelector((state) => state.game.timePlayed);
+  const score = useSelector((state) => state.game.score);
+  const player = useSelector((state) => state.game.player);
+  const rooms = useSelector((state) => state.game.rooms);
+  const currentRoom = useSelector((state) => state.game.currentRoom);
   return (
     <ListWrapper open={open}>
-      {playing && <ListOption onClick={handleSave}>~ save game</ListOption>}
+      {playing && (
+        <ListOption
+          onClick={() =>
+            handleSave(gameId, timePlayed, score, player, rooms, currentRoom)
+          }
+        >
+          ~ save game
+        </ListOption>
+      )}
       <ListOption onClick={handleLogout}>~ logout</ListOption>
     </ListWrapper>
   );
@@ -81,8 +96,8 @@ const Dashboard = () => {
     console.log("continue");
   };
 
-  const handleSave = () => {
-    //TODO
+  const handleSave = (id, timePlayed, score, player, rooms, currentRoom) => {
+    dispatch(saveUserGame(id, timePlayed, score, player, rooms, currentRoom));
     console.log("saving");
   };
 
@@ -97,24 +112,24 @@ const Dashboard = () => {
   useEffect(() => {
     if (playing && !paused && !activeGame) {
       const interval = setInterval(() => {
-        dispatch(updateTime())
-      }, 1000)
-      setTimer(interval)
+        dispatch(updateTime());
+      }, 1000);
+      setTimer(interval);
       setActiveGame(true);
     }
     return () => {
-      console.log("clearing")
-      clearInterval(timer)
-    }
-  }, [playing, paused, activeGame, timer, dispatch])
+      console.log("clearing");
+      clearInterval(timer);
+    };
+  }, [playing, paused, activeGame, timer, dispatch]);
 
   useEffect(() => {
     if (playing && paused && activeGame) {
-      setActiveGame(false)
-      setTimer(null)
-      clearInterval(timer)
+      setActiveGame(false);
+      setTimer(null);
+      clearInterval(timer);
     }
-  }, [playing, paused, timer, activeGame])
+  }, [playing, paused, timer, activeGame]);
 
   if (isGameLoading) {
     return (
@@ -146,9 +161,7 @@ const Dashboard = () => {
             handleContinue={handleContinue}
           />
         )}
-        {playing && (
-          <Clock />
-        )}
+        {playing && <Clock />}
       </CenterDiv>
     </>
   );

@@ -6,7 +6,7 @@ export const newGame = async (difficulty, name, playerId) => {
     .post("/api/game/new", {
       difficulty: difficulty,
       name: name,
-      playerId: playerId
+      playerId: playerId,
     })
     .then((res) => {
       console.log(res);
@@ -14,12 +14,14 @@ export const newGame = async (difficulty, name, playerId) => {
       response.data = res.data;
     })
     .catch((err) => {
-      console.log(err.response.data)
+      console.log(err.response.data);
       response.status = "error";
-      response.error = err.response.data.info ? err.response.data.info.message : err.response.data.errors;
+      response.error = err.response.data.info
+        ? err.response.data.info.message
+        : err.response.data.errors;
     });
   return response;
-}
+};
 
 export const getGame = async (id) => {
   const response = { status: "", data: null, error: null };
@@ -31,18 +33,31 @@ export const getGame = async (id) => {
       response.data = res.data;
     })
     .catch((err) => {
-      console.log(err.response.data)
+      console.log(err.response.data);
       response.status = "error";
-      response.error = err.response.data.info ? err.response.data.info.message : err.response.data.errors;
+      response.error = err.response.data.info
+        ? err.response.data.info.message
+        : err.response.data.errors;
     });
   return response;
-}
+};
 
-export const getValidInput = async (input) => {
+export const saveGame = async (
+  id,
+  timePlayed,
+  score,
+  player,
+  rooms,
+  currentRoom,
+) => {
   const response = { status: "", data: null, error: null };
   await axios
-    .post("/api/game/find", {
-      input: input
+    .post(`/api/game/save/${id}`, {
+      timePlayed: timePlayed,
+      score: score,
+      player: player,
+      rooms: rooms,
+      currentRoom: currentRoom,
     })
     .then((res) => {
       console.log(res);
@@ -50,9 +65,31 @@ export const getValidInput = async (input) => {
       response.data = res.data;
     })
     .catch((err) => {
-      console.log(err.response.data)
+      console.log(err.response.data);
       response.status = "error";
-      response.error = err.response.data.info ? err.response.data.info.message : err.response.data.errors;
+      response.error = err.response.data.info
+        ? err.response.data.info.message
+        : err.response.data.errors;
+    });
+};
+
+export const getValidInput = async (input) => {
+  const response = { status: "", data: null, error: null };
+  await axios
+    .post("/api/game/find", {
+      input: input,
+    })
+    .then((res) => {
+      console.log(res);
+      response.status = "ok";
+      response.data = res.data;
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      response.status = "error";
+      response.error = err.response.data.info
+        ? err.response.data.info.message
+        : err.response.data.errors;
     });
   return response;
-}
+};

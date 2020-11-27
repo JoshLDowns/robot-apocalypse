@@ -2225,6 +2225,7 @@ const generateGameState = (difficulty, name, playerId) => {
     score: 0,
     player: newPlayer,
     rooms: rooms,
+    currentRoom: "bunker",
     gameLog: [],
     status: "active"
   }

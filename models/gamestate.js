@@ -47,7 +47,7 @@ const EnemySchema = new mongoose.Schema({
   postRoomInfoAlternate: Array || undefined,
   postRoomInventory: Array || undefined,
   status: mongoose.Schema.Types.Mixed,
-})
+});
 
 const MappingSchema = new mongoose.Schema({
   north: {
@@ -106,9 +106,13 @@ const GameSchema = new mongoose.Schema({
   score: Number,
   player: PlayerSchema,
   rooms: [RoomSchema],
+  currentRoom: {
+    type: String,
+    default: "bunker",
+  },
   gameLog: Array,
   status: String,
-})
+});
 
 // const ScoreEntry = new mongoose.Schema({
 //   player: String,
@@ -116,4 +120,4 @@ const GameSchema = new mongoose.Schema({
 //   date: Date
 // })
 
-module.exports = Game = mongoose.model("games", GameSchema)
+module.exports = Game = mongoose.model("games", GameSchema);

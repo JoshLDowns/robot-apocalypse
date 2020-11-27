@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { newGame, getGame } from "../../api/gameApi";
+import { newGame, getGame, saveGame } from "../../api/gameApi";
 
 let initialState = {
   isLoading: false,
+  isUpdateLoading: false,
   id: null,
   dateStarted: null,
   playerId: null,
@@ -10,6 +11,7 @@ let initialState = {
   score: null,
   player: null,
   rooms: null,
+  currentRoom: null,
   gameLog: null,
   status: null,
   playing: false,
@@ -21,9 +23,14 @@ const startLoading = (state) => {
   state.isLoading = true;
 };
 
+const startUpdate = (state) => {
+  state.isUpdateLoading = true;
+};
+
 const loadingFailed = (state, action) => {
   const { error } = action.payload;
   state.isLoading = false;
+  state.isUpdateLoading = false;
   state.error = error;
 };
 
@@ -32,9 +39,11 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     setIsLoading: startLoading,
+    setUpdateLoading: startUpdate,
     getGameSuccess(state, action) {
       const { game } = action.payload;
       state.isLoading = false;
+      state.isUpdateLoading = false;
       state.id = game["_id"];
       state.dateStarted = game.dateStarted;
       state.playerId = game.playerId;
@@ -42,6 +51,7 @@ const gameSlice = createSlice({
       state.score = game.score;
       state.player = game.player;
       state.rooms = game.rooms;
+      state.currentRoom = game.currentRoom;
       state.gameLog = game.gameLog;
       state.status = game.status;
       state.error = null;
@@ -71,6 +81,7 @@ const gameSlice = createSlice({
       state.score = null;
       state.player = null;
       state.rooms = null;
+      state.currentRoom = null;
       state.gameLog = null;
       state.status = null;
       state.playing = false;
@@ -83,6 +94,7 @@ const gameSlice = createSlice({
 
 export const {
   setIsLoading,
+  setUpdateLoading,
   getGameSuccess,
   getGameFailure,
   updateScore,
@@ -115,6 +127,33 @@ export const getUserGame = (id) => async (dispatch) => {
   try {
     dispatch(setIsLoading());
     const game = await getGame(id);
+    if (game.error) {
+      throw game.error;
+    }
+    dispatch(getGameSuccess({ game: game.data }));
+  } catch (err) {
+    dispatch(setFailure({ error: err.toString() }));
+  }
+};
+
+export const saveUserGame = (
+  id,
+  timePlayed,
+  score,
+  player,
+  rooms,
+  currentRoom,
+) => async (dispatch) => {
+  try {
+    dispatch(setUpdateLoading());
+    const game = await saveGame(
+      id,
+      timePlayed,
+      score,
+      player,
+      rooms,
+      currentRoom,
+    );
     if (game.error) {
       throw game.error;
     }
