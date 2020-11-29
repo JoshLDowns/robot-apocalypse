@@ -6,7 +6,7 @@ import {
   updateGame,
   getValidInput,
 } from "../../api/gameApi";
-import { determineAction } from "../gameActions";
+import { determineAction } from "../../utility/gameActions";
 
 let initialState = {
   isLoading: false,
@@ -206,7 +206,7 @@ export const patchGame = (id, field, value) => async (dispatch) => {
   }
 };
 
-export const getInput = (input, mapping) => async (dispatch) => {
+export const getInput = (input, room) => async (dispatch) => {
   try {
     dispatch(setResponseLoading());
     const response = await getValidInput(input);
@@ -217,7 +217,7 @@ export const getInput = (input, mapping) => async (dispatch) => {
     if (response.data.errors) {
       dispatch(setResponse({ response: response.data.info }));
     } else {
-      let currentAction = determineAction(response.data.message, mapping);
+      let currentAction = determineAction(response.data.message, room);
       if (currentAction.action === "change-room") {
         dispatch(updateCurrentRoom({ room: currentAction.value }));
       }

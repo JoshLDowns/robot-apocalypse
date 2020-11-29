@@ -92,7 +92,7 @@ const GamePlay = () => {
   const handleInput = (evt) => {
     evt.preventDefault();
     console.log(evt.target.firstChild.value);
-    dispatch(getInput(evt.target.firstChild.value, currentRoomDetail.mapping));
+    dispatch(getInput(evt.target.firstChild.value, currentRoomDetail));
     evt.target.firstChild.value = "";
   };
 
