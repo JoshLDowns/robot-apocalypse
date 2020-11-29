@@ -90,3 +90,16 @@ export const DisplayTextPurp = styled("p")`
   margin: 0;
   padding: 0;
 `
+
+export const SmallGreenText = styled("p")`
+  font-size: .75rem;
+  font-family: "syne mono";
+  color: #29d409;
+  margin: 0;
+  padding: 0;
+`
+export const GreenText = styled("p")`
+  font-size: 1rem;
+  font-family: "syne mono";
+  color: #29d409;
+`

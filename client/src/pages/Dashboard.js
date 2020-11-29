@@ -17,7 +17,7 @@ import { ClickableText, CenterDiv } from "../styled-components/Components";
 import { LargeSpinLoader } from "../styled-components/AnimatedComponents";
 
 import Landing from "./Landing";
-import Clock from "../styled-components/Clock";
+import GamePlay from "./GamePlay";
 
 const TopBar = styled("div")`
   width: 100%;
@@ -80,6 +80,7 @@ const Dashboard = () => {
   const isGameLoading = useSelector((state) => state.game.isLoading);
   const playing = useSelector((state) => state.game.playing);
   const paused = useSelector((state) => state.game.paused);
+  const status = useSelector((state) => state.game.status);
 
   const handleOptions = () => {
     setOptionsOpen(!optionsOpen);
@@ -110,7 +111,7 @@ const Dashboard = () => {
 
   //These two use effects handle pausing and not pausing the game
   useEffect(() => {
-    if (playing && !paused && !activeGame) {
+    if (playing && !paused && !activeGame && status && status.includes("active")) {
       const interval = setInterval(() => {
         dispatch(updateTime());
       }, 1000);
@@ -121,15 +122,15 @@ const Dashboard = () => {
       console.log("clearing");
       clearInterval(timer);
     };
-  }, [playing, paused, activeGame, timer, dispatch]);
+  }, [playing, paused, activeGame, timer, status, dispatch]);
 
   useEffect(() => {
-    if (playing && paused && activeGame) {
+    if (playing && paused && activeGame && status && status.includes("active")) {
       setActiveGame(false);
       setTimer(null);
       clearInterval(timer);
     }
-  }, [playing, paused, timer, activeGame]);
+  }, [playing, paused, timer, activeGame, status]);
 
   if (isGameLoading) {
     return (
@@ -161,7 +162,7 @@ const Dashboard = () => {
             handleContinue={handleContinue}
           />
         )}
-        {playing && <Clock />}
+        {playing && <GamePlay />}
       </CenterDiv>
     </>
   );

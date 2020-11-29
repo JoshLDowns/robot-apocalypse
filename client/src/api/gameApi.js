@@ -73,6 +73,26 @@ export const saveGame = async (
     });
 };
 
+export const updateGame = async (id, field, value) => {
+  const response = { status: "", data: null, error: null };
+  await axios
+    .patch(`/api/game/${id}/update`, {
+      field: field,
+      value: value,
+    })
+    .then((res) => {
+      console.log(res);
+      response.status = "ok";
+      response.data = res.data;
+    })
+    .catch((err) => {
+      console.log(err.response.data)
+      response.status = "error";
+      response.error = err.response.data.info ? err.response.data.info.message : err.response.data.errors;
+    });
+  return response;
+}
+
 export const getValidInput = async (input) => {
   const response = { status: "", data: null, error: null };
   await axios

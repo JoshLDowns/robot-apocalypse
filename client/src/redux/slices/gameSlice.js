@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { newGame, getGame, saveGame } from "../../api/gameApi";
+import { newGame, getGame, saveGame, updateGame } from "../../api/gameApi";
 
 let initialState = {
   isLoading: false,
@@ -162,3 +162,16 @@ export const saveUserGame = (
     dispatch(setFailure({ error: err.toString() }));
   }
 };
+
+export const patchGame = (id, field, value) => async (dispatch) => {
+  try {
+    dispatch(setUpdateLoading());
+    const game = await updateGame(id, field, value);
+    if (game.error) {
+      throw game.error
+    };
+    dispatch(getGameSuccess({ game: game.data }));
+  } catch (err) {
+    dispatch(setFailure({ error: err.toString() }));
+  }
+}

@@ -43,7 +43,8 @@ router.post("/new", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const id = req.params.id;
-  const query = Game.where({ playerId: id, status: "active" });
+  console.log(id);
+  const query = Game.where({ playerId: id });
   query
     .findOne()
     .then((game) => {
@@ -56,6 +57,23 @@ router.get("/:id", (req, res) => {
         .json({ errors: err.toString(), info: "An error occured" });
     });
 });
+
+router.patch("/:id/update", (req, res) => {
+  const id = req.params.id;
+  const { field, value } = req.body;
+  Game.findByIdAndUpdate(
+    {_id: id},
+    {[field]: value},
+    {new: true}
+  )
+  .then((game) => {
+    console.log(game);
+    res.status(200).json(game);
+  })
+  .catch((err) => {
+    res.status(400).json({ errors: err.toString(), info: "An error occured"})
+  })
+})
 
 router.post("/save/:id", (req, res) => {
   const { timePlayed, score, player, rooms, currentRoom } = req.body;
