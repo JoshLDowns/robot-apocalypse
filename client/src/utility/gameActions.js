@@ -15,7 +15,7 @@ import {
   intObjects,
 } from "./inputArrays";
 
-export const determineAction = (input, room) => {
+export const determineAction = (input, room, player) => {
   
   if (directionArray.includes(input)) {
     if (input === "dnull") {
@@ -52,6 +52,20 @@ export const determineAction = (input, room) => {
           value: null,
           message: "There is nothing in that direction",
         };
+      }
+    }
+  } else if (pickUpItems.includes(input)) {
+    if (room.inventory.includes(getItemLookup[input])) {
+      return {
+        action: "get-item",
+        value: getItemLookup[input],
+        message: `You put the ${getItemLookup[input]} in your bag.`
+      }
+    } else {
+      return {
+        action: null,
+        value: null,
+        message: `There is no ${getItemLookup[input]} in this room ...`
       }
     }
   } else if (input === "not-sure") {

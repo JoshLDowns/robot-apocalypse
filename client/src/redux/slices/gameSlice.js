@@ -96,6 +96,26 @@ const gameSlice = createSlice({
       state.isResponseLoading = false;
       state.response = response;
     },
+    pickupItem(state, action) {
+      const { item, room } = action.payload;
+      let currentRooms = state.rooms.map((rm) => {
+        if (rm.id === room) {
+          let currentInventory = [...rm.inventory]
+          currentInventory.splice(currentInventory.indexOf(item), 1)
+          return {
+            ...rm,
+            inventory: currentInventory
+          }
+        } else return { ...rm }
+      })
+      let currentPlayerInventory = [...state.player.inventory];
+      currentPlayerInventory.push(item)
+      state.rooms = currentRooms;
+      state.player = {
+        ...state.player,
+        inventory: currentPlayerInventory,
+      }
+    },
     clearGame(state) {
       state.isLoading = false;
       state.isUpdateLoading = false;
@@ -131,6 +151,7 @@ export const {
   setPlaying,
   setPaused,
   setResponse,
+  pickupItem,
   clearGame,
   setFailure,
 } = gameSlice.actions;
@@ -206,7 +227,7 @@ export const patchGame = (id, field, value) => async (dispatch) => {
   }
 };
 
-export const getInput = (input, room) => async (dispatch) => {
+export const getInput = (input, room, player) => async (dispatch) => {
   try {
     dispatch(setResponseLoading());
     const response = await getValidInput(input);
@@ -217,9 +238,12 @@ export const getInput = (input, room) => async (dispatch) => {
     if (response.data.errors) {
       dispatch(setResponse({ response: response.data.info }));
     } else {
-      let currentAction = determineAction(response.data.message, room);
+      let currentAction = determineAction(response.data.message, room, player);
       if (currentAction.action === "change-room") {
         dispatch(updateCurrentRoom({ room: currentAction.value }));
+      }
+      if (currentAction.action === "get-item") {
+        dispatch(pickupItem({ item: currentAction.value }))
       }
       dispatch(setResponse({ response: currentAction.message }));
     }

@@ -8,8 +8,6 @@ import { patchGame, getInput } from "../redux/slices/gameSlice";
 import { convertMappingToString } from "../utility/converterFunctions";
 
 import {
-  ClickableText,
-  LargeButton,
   GreenText,
   PurpleText,
   GameInput,
@@ -78,6 +76,7 @@ const GamePlay = () => {
   const currentRoomDetail = useSelector((state) =>
     state.game.rooms.find((room) => room.roomId === currentRoom)
   );
+  const player = useSelector((state) => state.game.player);
   const isGameLoading = useSelector((state) => state.game.isUpdateLoading);
   const isResponseLoading = useSelector((state) => state.game.isResponseLoading);
   const status = useSelector((state) => state.game.status);
@@ -91,8 +90,7 @@ const GamePlay = () => {
 
   const handleInput = (evt) => {
     evt.preventDefault();
-    console.log(evt.target.firstChild.value);
-    dispatch(getInput(evt.target.firstChild.value, currentRoomDetail));
+    dispatch(getInput(evt.target.firstChild.value, currentRoomDetail, player));
     evt.target.firstChild.value = "";
   };
 
