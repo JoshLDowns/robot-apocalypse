@@ -1,9 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { newGame, getGame, saveGame, updateGame } from "../../api/gameApi";
+import {
+  newGame,
+  getGame,
+  saveGame,
+  updateGame,
+  getValidInput,
+} from "../../api/gameApi";
+import { determineAction } from "../gameActions";
 
 let initialState = {
   isLoading: false,
   isUpdateLoading: false,
+  isResponseLoading: false,
   id: null,
   dateStarted: null,
   playerId: null,
@@ -16,6 +24,7 @@ let initialState = {
   status: null,
   playing: false,
   paused: false,
+  response: "",
   error: null,
 };
 
@@ -27,10 +36,15 @@ const startUpdate = (state) => {
   state.isUpdateLoading = true;
 };
 
+const startResponse = (state) => {
+  state.isResponseLoading = true;
+};
+
 const loadingFailed = (state, action) => {
   const { error } = action.payload;
   state.isLoading = false;
   state.isUpdateLoading = false;
+  state.isResponseLoading = false;
   state.error = error;
 };
 
@@ -40,6 +54,7 @@ const gameSlice = createSlice({
   reducers: {
     setIsLoading: startLoading,
     setUpdateLoading: startUpdate,
+    setResponseLoading: startResponse,
     getGameSuccess(state, action) {
       const { game } = action.payload;
       state.isLoading = false;
@@ -66,14 +81,25 @@ const gameSlice = createSlice({
     updateTime(state) {
       state.timePlayed = state.timePlayed + 1;
     },
+    updateCurrentRoom(state, action) {
+      const { room } = action.payload;
+      state.currentRoom = room;
+    },
     setPlaying(state) {
       state.playing = !state.playing;
     },
     setPaused(state) {
       state.paused = !state.paused;
     },
+    setResponse(state, action) {
+      const { response } = action.payload;
+      state.isResponseLoading = false;
+      state.response = response;
+    },
     clearGame(state) {
       state.isLoading = false;
+      state.isUpdateLoading = false;
+      state.isResponseLoading = false;
       state.id = null;
       state.dateStarted = null;
       state.playerId = null;
@@ -86,6 +112,7 @@ const gameSlice = createSlice({
       state.status = null;
       state.playing = false;
       state.paused = false;
+      state.response = "";
       state.error = null;
     },
     setFailure: loadingFailed,
@@ -95,12 +122,15 @@ const gameSlice = createSlice({
 export const {
   setIsLoading,
   setUpdateLoading,
+  setResponseLoading,
   getGameSuccess,
   getGameFailure,
   updateScore,
   updateTime,
+  updateCurrentRoom,
   setPlaying,
   setPaused,
+  setResponse,
   clearGame,
   setFailure,
 } = gameSlice.actions;
@@ -142,7 +172,7 @@ export const saveUserGame = (
   score,
   player,
   rooms,
-  currentRoom,
+  currentRoom
 ) => async (dispatch) => {
   try {
     dispatch(setUpdateLoading());
@@ -152,7 +182,7 @@ export const saveUserGame = (
       score,
       player,
       rooms,
-      currentRoom,
+      currentRoom
     );
     if (game.error) {
       throw game.error;
@@ -168,10 +198,32 @@ export const patchGame = (id, field, value) => async (dispatch) => {
     dispatch(setUpdateLoading());
     const game = await updateGame(id, field, value);
     if (game.error) {
-      throw game.error
-    };
+      throw game.error;
+    }
     dispatch(getGameSuccess({ game: game.data }));
   } catch (err) {
     dispatch(setFailure({ error: err.toString() }));
   }
-}
+};
+
+export const getInput = (input, mapping) => async (dispatch) => {
+  try {
+    dispatch(setResponseLoading());
+    const response = await getValidInput(input);
+    if (response.error) {
+      throw response.error;
+    }
+    console.log(response);
+    if (response.data.errors) {
+      dispatch(setResponse({ response: response.data.info }));
+    } else {
+      let currentAction = determineAction(response.data.message, mapping);
+      if (currentAction.action === "change-room") {
+        dispatch(updateCurrentRoom({ room: currentAction.value }));
+      }
+      dispatch(setResponse({ response: currentAction.message }));
+    }
+  } catch (err) {
+    dispatch(setFailure({ error: err.toString() }));
+  }
+};

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { DisplayTextPurp } from "./Components";
+import { LargePurpleText } from "./Components";
 
 import { useSelector } from "react-redux";
 import { useTimeFormat } from "../hooks/useTimeFormat";
@@ -10,7 +10,7 @@ const Clock = () => {
   const currentTime = useTimeFormat(time);
 
   return (
-    <DisplayTextPurp>{`${currentTime.hours} :: ${currentTime.minutes} :: ${currentTime.seconds}`}</DisplayTextPurp>
+    <LargePurpleText>{`${currentTime.hours} :: ${currentTime.minutes} :: ${currentTime.seconds}`}</LargePurpleText>
   );
 };
 

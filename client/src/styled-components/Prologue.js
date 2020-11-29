@@ -11,19 +11,21 @@ import {
 
 const Backdrop = styled("div")`
   position: fixed;
+  top: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #29d409;
-  opacity: 0.5;
+  background-color: black;
+  opacity: 1;
+  z-index: 20;
 `;
 
 const PrologueModal = styled("div")`
   width: 500px;
-  height: 500px;
+  height: 600px;
   box-sizing: border-box;
   padding: 10px;
   display: flex;
@@ -32,6 +34,7 @@ const PrologueModal = styled("div")`
   text-align: center;
   background-color: black;
   position: relative;
+  z-index: 25;
 `;
 
 const ButtonBar = styled("div")`
@@ -70,10 +73,10 @@ const fullPrologue = (user) => [
   `You think for a moment, everything was happening so quickly, but this human seemed to have good intentions. After a moment you respond, '${user}.`,
   "'I KNEW IT,' she yelled, 'you ARE my father's robot!!!'",
   "You weren't sure what that meant, but before you could ask, the human jumped right into an explanation for you...",
-  "'First off, my name is Ella Lloyd, the daughter of James Lloyd, the father of all machines ... and you my friend, YOU were his last hope for humanity.  After the machines AI went AWOL and it became clear what their motive was, my father holed himself up and built you in hopes that instilling human emotion in the machines would put an end to their tyranny. He hoped that human compassion would be enough to fight the urge to purify the planet.  Unfortunately his secret lab was attacked and he was killed before he could transfer your code to the rest of the machines. Unaware of what you were at the time, the machines left you there. It seems though, they have figured out just what it is you are unfortunately. I'm hoping you can help us, all of us ... what's left of humanity itself to overcome the machine race, and give us a chance at a new life.  I used what supplies I could muster up to give you some upgrades, so you should be a little more fit for battle now.",
+  "'First off, my name is Ella Lloyd, the daughter of James Lloyd, the father of all machines ... and you my friend, YOU were his last hope for humanity.  After the machines AI went AWOL and it became clear what their motive was, my father holed himself up and built you in hopes that instilling human emotion in the machines would put an end to their tyranny. He hoped that human compassion would be enough to fight the urge to purify the planet.  Unfortunately his secret lab was attacked and he was killed before he could transfer your code to the rest of the machines. Unaware of what you were at the time, the machines left you there. It seems though, they have figured out just what it is you are unfortunately. I'm hoping you can help us, all of us ...'", "Ella continued, 'What's left of humanity itself to overcome the machine race, and give us a chance at a new life.  I used what supplies I could muster up to give you some upgrades, so you should be a little more fit for battle now.",
   "...As Ella spoke, you struggled to comprehend what she was telling you...",
   "You are humanity's last hope? You were created to save the human race? All these things you have been 'feeling' are human emotions? Knowing that didn't help you understand what that meant yet ... hopefully that will come in time...",
-  "Ella, in all of her excitement took no notice to your confusion, 'We are currently in an old Fallout Bunker deep underground in the center of the Robotics United Towers ... where the machines were invented.  I stationed us here in hopes that being close to enemy would help us figure out a way to fight them. In my father's office in the North Tower, his computer must still be functioning.  It just has to be in order for the machines to all be operational. The computer is connected to many back up servers around the world though, so simply shutting it off won't shut down the machines. There are three Killcodes though, one in each of the towers.  You can get them in the server room of each tower, but they are most likely guarded. If you enter all the Killcodes into the shutdown program on my father's computer, it will shut the whole system down.  This means you will be shut down too, but this is why you were created, this is your mission ... will you help us?",
+  "Ella, in all of her excitement took no notice to your confusion, 'We are currently in an old Fallout Bunker deep underground in the center of the Robotics United Towers ... where the machines were invented.  I stationed us here in hopes that being close to enemy would help us figure out a way to fight them. In my father's office in the North Tower, his computer must still be functioning.  It just has to be in order for the machines to all be operational. The computer is connected to many back up servers around the world though, so simply shutting it off won't shut down the machines. There are three Killcodes though, one in each of the towers.  You can get them in the server room of each tower, but they are most likely guarded. If you enter all the Killcodes into the shutdown program on my father's computer, it will shut the whole system down.'",  "'This means you will be shut down too, but this is why you were created, this is your mission ... will you help us?'",
   "... That was a lot to take in, but you cautiously answer yes, this is what you were meant for right?",
   "'One last thing' Ella continues, 'My father hid Riddle Boxes in each of the towers with backup keys. They are most likely out in the open, as they were just his spare keys. You'll need the keycards inside to get around each Tower.'",
 ];

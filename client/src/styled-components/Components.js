@@ -9,7 +9,7 @@ export const CenterDiv = styled("div")`
   justify-content: center;
   align-items: center;
   text-align: center;
-`
+`;
 
 export const AuthenticateInput = styled("input")`
   width: 100%;
@@ -28,9 +28,9 @@ export const AuthenticateInput = styled("input")`
   margin: 10px 0;
   text-align: center;
   &:focus {
-    outline: none
+    outline: none;
   }
-`
+`;
 
 export const LargeButton = styled("button")`
   padding: 10px;
@@ -45,9 +45,9 @@ export const LargeButton = styled("button")`
     cursor: pointer;
   }
   &:focus {
-    outline: none
+    outline: none;
   }
-`
+`;
 
 export const SmallButton = styled("button")`
   padding: 5px;
@@ -61,9 +61,9 @@ export const SmallButton = styled("button")`
     cursor: pointer;
   }
   &:focus {
-    outline: none
+    outline: none;
   }
-`
+`;
 
 export const OutboundLink = styled("a")`
   text-decoration: none;
@@ -71,35 +71,77 @@ export const OutboundLink = styled("a")`
   font-family: "syne mono";
   color: #29d409;
   margin: 30px 20px;
-`
+`;
 
 export const ClickableText = styled("p")`
   font-size: 1.5rem;
   font-family: "syne mono";
-  color: ${props => props.clicked ? "#d4098f" : "#29d409"};
+  color: ${(props) => (props.clicked ? "#d4098f" : "#29d409")};
   margin: 30px 20px;
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
-export const DisplayTextPurp = styled("p")`
+export const SmallPurpleText = styled("p")`
+  font-size: 0.75rem;
+  font-family: "syne mono";
+  color: #d4098f;
+  margin: 0;
+  padding: 0;
+`;
+export const PurpleText = styled("p")`
+  font-size: 1rem;
+  font-family: "syne mono";
+  color: #d4098f;
+`;
+
+export const LargePurpleText = styled("p")`
   font-size: 1.25rem;
   font-family: "syne mono";
   color: #d4098f;
   margin: 0;
   padding: 0;
-`
+`;
 
 export const SmallGreenText = styled("p")`
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-family: "syne mono";
   color: #29d409;
   margin: 0;
   padding: 0;
-`
+`;
 export const GreenText = styled("p")`
   font-size: 1rem;
   font-family: "syne mono";
   color: #29d409;
-`
+`;
+
+export const LargeGreenText = styled("p")`
+  font-size: 1.25rem;
+  font-family: "syne mono";
+  color: #29d409;
+  margin: 0;
+  padding: 0;
+`;
+
+export const GameInput = styled("input")`
+  width: 100%;
+  font-size: 1rem;
+  font-family: "syne mono";
+  box-sizing: border-box;
+  padding: 5px;
+  border-style: none;
+  border-top: 2.5px solid #d4098f;
+  border-left: none;
+  border-right: none;
+  border-image: none;
+  border-bottom: 5px solid #29d409;
+  background-color: black;
+  color: #29d409;
+  margin: 10px 0;
+  text-align: center;
+  &:focus {
+    outline: none;
+  }
+`;

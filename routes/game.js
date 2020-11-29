@@ -10,7 +10,7 @@ router.post("/find", (req, res) => {
   const stringObj = validateInput.getFirstLast(req.body.input);
   if (!stringObj) {
     res
-      .status(400)
+      .status(200)
       .json({
         errors: "invalid input",
         info: "I am not sure what that means ...",
