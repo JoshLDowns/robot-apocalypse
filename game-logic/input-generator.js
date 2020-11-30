@@ -199,6 +199,10 @@ class ValidInput {
           return "insp";
         } else if (obj.firstWord === "LOOK" && obj.lastWord === "AROUND") {
           return "insp";
+        } else if (obj.lastWord === "INSPECT") {
+          return "insp";
+        } else {
+          return "not_sure"
         }
       } else if (obj.firstWord === "CHECK" && obj.lastWord === "ROOM") {
         return "insp";

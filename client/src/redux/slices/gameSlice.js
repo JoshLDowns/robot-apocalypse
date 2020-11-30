@@ -98,23 +98,28 @@ const gameSlice = createSlice({
     },
     pickupItem(state, action) {
       const { item, room } = action.payload;
+      console.log(room.roomId);
       let currentRooms = state.rooms.map((rm) => {
-        if (rm.id === room) {
-          let currentInventory = [...rm.inventory]
-          currentInventory.splice(currentInventory.indexOf(item), 1)
+        if (rm.roomId === room.roomId) {
+          console.log(rm);
+          let currentInventory = [...rm.inventory];
+          currentInventory.splice(currentInventory.indexOf(item), 1);
           return {
             ...rm,
-            inventory: currentInventory
-          }
-        } else return { ...rm }
-      })
+            inventory: currentInventory,
+          };
+        } else
+          return {
+            ...rm,
+          };
+      });
       let currentPlayerInventory = [...state.player.inventory];
-      currentPlayerInventory.push(item)
+      currentPlayerInventory.push(item);
       state.rooms = currentRooms;
       state.player = {
         ...state.player,
         inventory: currentPlayerInventory,
-      }
+      };
     },
     clearGame(state) {
       state.isLoading = false;
@@ -234,7 +239,6 @@ export const getInput = (input, room, player) => async (dispatch) => {
     if (response.error) {
       throw response.error;
     }
-    console.log(response);
     if (response.data.errors) {
       dispatch(setResponse({ response: response.data.info }));
     } else {
@@ -243,7 +247,7 @@ export const getInput = (input, room, player) => async (dispatch) => {
         dispatch(updateCurrentRoom({ room: currentAction.value }));
       }
       if (currentAction.action === "get-item") {
-        dispatch(pickupItem({ item: currentAction.value }))
+        dispatch(pickupItem({ item: currentAction.value, room: room }));
       }
       dispatch(setResponse({ response: currentAction.message }));
     }

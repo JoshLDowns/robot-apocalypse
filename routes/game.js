@@ -17,6 +17,7 @@ router.post("/find", (req, res) => {
       });
   } else {
     let response = validateInput.returnInput(stringObj);
+    console.log(response);
     res.status(200).json({ message: response });
   }
 });

@@ -119,7 +119,6 @@ const Dashboard = () => {
       setActiveGame(true);
     }
     return () => {
-      console.log("clearing");
       clearInterval(timer);
     };
   }, [playing, paused, activeGame, timer, status, dispatch]);

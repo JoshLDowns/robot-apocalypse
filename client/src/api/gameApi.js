@@ -28,7 +28,6 @@ export const getGame = async (id) => {
   await axios
     .get(`/api/game/${id}`)
     .then((res) => {
-      console.log(res);
       response.status = "ok";
       response.data = res.data;
     })
@@ -60,7 +59,6 @@ export const saveGame = async (
       currentRoom: currentRoom,
     })
     .then((res) => {
-      console.log(res);
       response.status = "ok";
       response.data = res.data;
     })
@@ -81,7 +79,6 @@ export const updateGame = async (id, field, value) => {
       value: value,
     })
     .then((res) => {
-      console.log(res);
       response.status = "ok";
       response.data = res.data;
     })
@@ -100,7 +97,6 @@ export const getValidInput = async (input) => {
       input: input,
     })
     .then((res) => {
-      console.log(res);
       response.status = "ok";
       response.data = res.data;
     })
