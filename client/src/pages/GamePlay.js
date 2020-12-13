@@ -3,7 +3,13 @@ import styled from "@emotion/styled/macro";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { patchGame, getInput } from "../redux/slices/gameSlice";
+import {
+  patchGame,
+  getInput,
+  setInventoryOpen,
+  setLogOpen,
+  setHelpOpen,
+} from "../redux/slices/gameSlice";
 
 import { convertMappingToString } from "../utility/converterFunctions";
 
@@ -67,6 +73,37 @@ const GameTextWrapper = styled("section")`
   padding: 10px;
 `;
 
+const GameFooter = styled("section")`
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: "center";
+`;
+
+const OptionButtonBar = styled("div")`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+const OptionButton = styled("button")`
+  width: 33.3333%;
+  font-size: 1rem;
+  font-family: "syne mono";
+  background-color: black;
+  box-sizing: border-box;
+  color: ${(props) => (props.clicked ? "#d4098f" : "#29d409")};
+  border: 2px solid #d4098f;
+  margin: 0;
+  &:hover {
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
 const GamePlay = () => {
   const dispatch = useDispatch();
 
@@ -78,10 +115,15 @@ const GamePlay = () => {
   );
   const player = useSelector((state) => state.game.player);
   const isGameLoading = useSelector((state) => state.game.isUpdateLoading);
-  const isResponseLoading = useSelector((state) => state.game.isResponseLoading);
+  const isResponseLoading = useSelector(
+    (state) => state.game.isResponseLoading
+  );
   const status = useSelector((state) => state.game.status);
   const id = useSelector((state) => state.game.id);
   const response = useSelector((state) => state.game.response);
+  const isInventoryOpen = useSelector((state) => state.game.isInventoryOpen);
+  const isLogOpen = useSelector((state) => state.game.isLogOpen);
+  const isHelpOpen = useSelector((state) => state.game.isHelpOpen);
 
   const startGame = useCallback(() => {
     dispatch(patchGame(id, "status", "active"));
@@ -92,6 +134,19 @@ const GamePlay = () => {
     evt.preventDefault();
     dispatch(getInput(evt.target.firstChild.value, currentRoomDetail, player));
     evt.target.firstChild.value = "";
+  };
+
+  const handleOption = (evt) => {
+    console.log(evt.target.id);
+    if (evt.target.id === "btn-inv") {
+      dispatch(setInventoryOpen());
+    }
+    if (evt.target.id === "btn-log") {
+      dispatch(setLogOpen());
+    }
+    if (evt.target.id === "btn-help") {
+      dispatch(setHelpOpen());
+    }
   };
 
   useEffect(() => {
@@ -126,7 +181,9 @@ const GamePlay = () => {
               <GreenText
                 style={{
                   marginBottom:
-                    index !== currentRoomDetail.info.length - 1 ? "10px" : "0px",
+                    index !== currentRoomDetail.info.length - 1
+                      ? "10px"
+                      : "0px",
                 }}
                 key={index}
               >
@@ -148,9 +205,30 @@ const GamePlay = () => {
         </>
       )}
       {isGameLoading && <SmallSpinLoader />}
-      <form style={{ width: "100%" }} onSubmit={handleInput}>
-        <GameInput placeholder="What would you like to do?" autoFocus/>
-      </form>
+      <GameFooter>
+        <OptionButtonBar>
+          <OptionButton
+            id="btn-inv"
+            clicked={isInventoryOpen}
+            onClick={handleOption}
+          >
+            INVENTORY
+          </OptionButton>
+          <OptionButton id="btn-log" clicked={isLogOpen} onClick={handleOption}>
+            LOG
+          </OptionButton>
+          <OptionButton
+            id="btn-help"
+            clicked={isHelpOpen}
+            onClick={handleOption}
+          >
+            HELP
+          </OptionButton>
+        </OptionButtonBar>
+        <form style={{ width: "100%" }} onSubmit={handleInput}>
+          <GameInput placeholder="What would you like to do?" autoFocus />
+        </form>
+      </GameFooter>
     </GameWindow>
   );
 };

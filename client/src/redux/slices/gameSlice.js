@@ -25,6 +25,9 @@ let initialState = {
   playing: false,
   paused: false,
   response: "",
+  isInventoryOpen: false,
+  isLogOpen: false,
+  isHelpOpen: false,
   error: null,
 };
 
@@ -121,6 +124,21 @@ const gameSlice = createSlice({
         inventory: currentPlayerInventory,
       };
     },
+    setInventoryOpen(state) {
+      state.isInventoryOpen = !state.isInventoryOpen;
+      state.isLogOpen = false;
+      state.isHelpOpen = false;
+    },
+    setLogOpen(state) {
+      state.isLogOpen = !state.isLogOpen;
+      state.isInventoryOpen = false;
+      state.isHelpOpen = false;
+    },
+    setHelpOpen(state) {
+      state.isHelpOpen = !state.isHelpOpen;
+      state.isInventoryOpen = false;
+      state.isLogOpen = false;
+    },
     clearGame(state) {
       state.isLoading = false;
       state.isUpdateLoading = false;
@@ -138,6 +156,9 @@ const gameSlice = createSlice({
       state.playing = false;
       state.paused = false;
       state.response = "";
+      state.isInventoryOpen = false;
+      state.isLogOpen = false;
+      state.isHelpOpen = false;
       state.error = null;
     },
     setFailure: loadingFailed,
@@ -157,6 +178,9 @@ export const {
   setPaused,
   setResponse,
   pickupItem,
+  setInventoryOpen,
+  setLogOpen,
+  setHelpOpen,
   clearGame,
   setFailure,
 } = gameSlice.actions;
