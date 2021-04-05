@@ -109,17 +109,28 @@ export const determineAction = (input, room, player) => {
     }
   } else if (pickUpItems.includes(input)) {
     //TODO handle riddle boxes!
-    if (room.inventory.includes(getItemLookup[input])) {
+    if (
+      room.inventory.includes(getItemLookup[input]) ||
+      (input === "pu_all" && room.inventory.length > 0)
+    ) {
       return {
         action: "get-item",
         value: getItemLookup[input],
-        message: `You put the ${getItemLookup[input]} in your bag.`,
+        message:
+          input === "pu_all"
+            ? `You puth the following items in your bag: ${room.inventory.join(
+                ", "
+              )}`
+            : `You put the ${getItemLookup[input]} in your bag.`,
       };
     } else {
       return {
         action: null,
         value: null,
-        message: `There is no ${getItemLookup[input]} in this room ...`,
+        message:
+          input === "pu_all" && room.inventory.length === 0
+            ? "There are no items in this room"
+            : `There is no ${getItemLookup[input]} in this room ...`,
       };
     }
   } else if (input === "not-sure") {

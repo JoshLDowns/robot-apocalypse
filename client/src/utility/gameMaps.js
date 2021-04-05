@@ -47,6 +47,7 @@ export const getItemLookup = {
   pu_letter: "Letter",
   pu_plating: "Graphene Plating",
   pu_diode: "Regeneration Diode",
+  pu_all: "All"
 };
 
 export const dropItemLookup = {

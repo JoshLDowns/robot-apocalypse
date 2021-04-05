@@ -102,11 +102,18 @@ const gameSlice = createSlice({
     pickupItem(state, action) {
       const { item, room } = action.payload;
       console.log(room.roomId);
+      let useableInventory;
       let currentRooms = state.rooms.map((rm) => {
         if (rm.roomId === room.roomId) {
           console.log(rm);
           let currentInventory = [...rm.inventory];
-          currentInventory.splice(currentInventory.indexOf(item), 1);
+          useableInventory = currentInventory;
+          if (item !== "All") {
+            currentInventory.splice(currentInventory.indexOf(item), 1);
+          }
+          if (item === "All") {
+            currentInventory = [];
+          }
           return {
             ...rm,
             inventory: currentInventory,
@@ -117,7 +124,12 @@ const gameSlice = createSlice({
           };
       });
       let currentPlayerInventory = [...state.player.inventory];
-      currentPlayerInventory.push(item);
+      if (item !== "All") {
+        currentPlayerInventory.push(item);
+      }
+      if (item === "All") {
+        useableInventory.forEach((i) => currentPlayerInventory.push(i))
+      }
       state.rooms = currentRooms;
       state.player = {
         ...state.player,
