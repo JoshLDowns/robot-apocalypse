@@ -128,8 +128,30 @@ const gameSlice = createSlice({
         currentPlayerInventory.push(item);
       }
       if (item === "All") {
-        useableInventory.forEach((i) => currentPlayerInventory.push(i))
+        useableInventory.forEach((i) => currentPlayerInventory.push(i));
       }
+      state.rooms = currentRooms;
+      state.player = {
+        ...state.player,
+        inventory: currentPlayerInventory,
+      };
+    },
+    dropItem(state, action) {
+      const { item, room } = action.payload;
+      let currentRooms = state.rooms.map((rm) => {
+        if (rm.roomId === room.roomId) {
+          let currentInventory = [...rm.inventory, item];
+          return {
+            ...rm,
+            inventory: currentInventory,
+          };
+        } else
+          return {
+            ...rm,
+          };
+      });
+      let currentPlayerInventory = state.player.inventory;
+      currentPlayerInventory.splice(currentPlayerInventory.indexOf(item), 1);
       state.rooms = currentRooms;
       state.player = {
         ...state.player,
@@ -190,6 +212,7 @@ export const {
   setPaused,
   setResponse,
   pickupItem,
+  dropItem,
   setInventoryOpen,
   setLogOpen,
   setHelpOpen,
@@ -284,6 +307,11 @@ export const getInput = (input, room, player) => async (dispatch) => {
       }
       if (currentAction.action === "get-item") {
         dispatch(pickupItem({ item: currentAction.value, room: room }));
+      }
+      if (currentAction.action === "drop-item") {
+        dispatch(
+          dropItem({ item: currentAction.value, room: room })
+        );
       }
       dispatch(setResponse({ response: currentAction.message }));
     }
