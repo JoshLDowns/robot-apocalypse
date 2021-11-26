@@ -6,6 +6,7 @@ const PlayerSchema = new mongoose.Schema({
   maxHealth: Number,
   health: Number,
   inventory: Array,
+  log: Array,
   attack: String,
   damageBase: Number,
   damageModifier: Number,

@@ -6,7 +6,7 @@ import {
   updateGame,
   getValidInput,
 } from "../../api/gameApi";
-import { determineAction } from "../../utility/gameActions";
+import { determineAction, determineLogMessage } from "../../utility/gameActions";
 
 let initialState = {
   isLoading: false,
@@ -173,6 +173,13 @@ const gameSlice = createSlice({
       state.isInventoryOpen = false;
       state.isLogOpen = false;
     },
+    updateLog(state, action) {
+      const { entry } = action.payload;
+      state.player = {
+        ...state.player,
+        log: state.player.log.reverse().concat(entry).reverse(),
+      };
+    },
     clearGame(state) {
       state.isLoading = false;
       state.isUpdateLoading = false;
@@ -216,27 +223,27 @@ export const {
   setInventoryOpen,
   setLogOpen,
   setHelpOpen,
+  updateLog,
   clearGame,
   setFailure,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
 
-export const startNewGame = (difficulty, name, playerId) => async (
-  dispatch
-) => {
-  try {
-    dispatch(setIsLoading());
-    const game = await newGame(difficulty, name, playerId);
-    if (game.error) {
-      throw game.error;
+export const startNewGame =
+  (difficulty, name, playerId) => async (dispatch) => {
+    try {
+      dispatch(setIsLoading());
+      const game = await newGame(difficulty, name, playerId);
+      if (game.error) {
+        throw game.error;
+      }
+      dispatch(setPlaying());
+      dispatch(getGameSuccess({ game: game.data }));
+    } catch (err) {
+      dispatch(setFailure({ error: err.toString() }));
     }
-    dispatch(setPlaying());
-    dispatch(getGameSuccess({ game: game.data }));
-  } catch (err) {
-    dispatch(setFailure({ error: err.toString() }));
-  }
-};
+  };
 
 export const getUserGame = (id) => async (dispatch) => {
   try {
@@ -251,32 +258,26 @@ export const getUserGame = (id) => async (dispatch) => {
   }
 };
 
-export const saveUserGame = (
-  id,
-  timePlayed,
-  score,
-  player,
-  rooms,
-  currentRoom
-) => async (dispatch) => {
-  try {
-    dispatch(setUpdateLoading());
-    const game = await saveGame(
-      id,
-      timePlayed,
-      score,
-      player,
-      rooms,
-      currentRoom
-    );
-    if (game.error) {
-      throw game.error;
+export const saveUserGame =
+  (id, timePlayed, score, player, rooms, currentRoom) => async (dispatch) => {
+    try {
+      dispatch(setUpdateLoading());
+      const game = await saveGame(
+        id,
+        timePlayed,
+        score,
+        player,
+        rooms,
+        currentRoom
+      );
+      if (game.error) {
+        throw game.error;
+      }
+      dispatch(getGameSuccess({ game: game.data }));
+    } catch (err) {
+      dispatch(setFailure({ error: err.toString() }));
     }
-    dispatch(getGameSuccess({ game: game.data }));
-  } catch (err) {
-    dispatch(setFailure({ error: err.toString() }));
-  }
-};
+  };
 
 export const patchGame = (id, field, value) => async (dispatch) => {
   try {
@@ -309,11 +310,23 @@ export const getInput = (input, room, player) => async (dispatch) => {
         dispatch(pickupItem({ item: currentAction.value, room: room }));
       }
       if (currentAction.action === "drop-item") {
-        dispatch(
-          dropItem({ item: currentAction.value, room: room })
-        );
+        dispatch(dropItem({ item: currentAction.value, room: room }));
+      }
+      if (currentAction.action === "toggle-inventory") {
+        dispatch(setInventoryOpen());
       }
       dispatch(setResponse({ response: currentAction.message }));
+      if (!currentAction.action.includes("toggle")) {
+        dispatch(
+          updateLog({
+            entry: {
+              time: new Date().toLocaleTimeString(),
+              input: input,
+              message: determineLogMessage(currentAction),
+            },
+          })
+        );
+      }
     }
   } catch (err) {
     dispatch(setFailure({ error: err.toString() }));

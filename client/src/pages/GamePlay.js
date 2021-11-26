@@ -73,6 +73,25 @@ const GameTextWrapper = styled("section")`
   padding: 10px;
 `;
 
+const ExtrasWrapper = styled("div")`
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ExtrasTextWrapper = styled("div")`
+  margin: 10px;
+  box-sizing: border-box;
+  border: ${(props) => (props.border ? "1px solid #d4098f" : "")};
+  padding: 5px;
+  width: Calc(100% - 20px);
+  display: flex;
+  flex-direction: ${(props) => (props.column ? "column" : "row")};
+  justify-content: space-between;
+`;
+
 const GameFooter = styled("section")`
   width: 100%;
   height: fit-content;
@@ -104,26 +123,39 @@ const OptionButton = styled("button")`
   }
 `;
 
+const buildInventory = (inventory) => {
+  if (!inventory || inventory.length === 0)
+    return [{ name: "You currently do not have any items ...", count: null }];
+  const groups = inventory.reduce((groups, i) => {
+    let groupName = i;
+    groups[groupName] = groups[groupName] || 0;
+    groups[groupName] = groups[groupName] + 1;
+    return groups;
+  }, {});
+
+  return Object.keys(groups).map((g) => ({ name: g, count: groups[g] }));
+};
+
 const GamePlay = () => {
   const dispatch = useDispatch();
 
   const [prologueOpen, setPrologueOpen] = useState(false);
 
-  const currentRoom = useSelector((state) => state.game.currentRoom);
+  const {
+    player,
+    currentRoom,
+    isGameLoading,
+    isResponseLoading,
+    status,
+    id,
+    response,
+    isInventoryOpen,
+    isLogOpen,
+    isHelpOpen,
+  } = useSelector((state) => state.game);
   const currentRoomDetail = useSelector((state) =>
     state.game.rooms.find((room) => room.roomId === currentRoom)
   );
-  const player = useSelector((state) => state.game.player);
-  const isGameLoading = useSelector((state) => state.game.isUpdateLoading);
-  const isResponseLoading = useSelector(
-    (state) => state.game.isResponseLoading
-  );
-  const status = useSelector((state) => state.game.status);
-  const id = useSelector((state) => state.game.id);
-  const response = useSelector((state) => state.game.response);
-  const isInventoryOpen = useSelector((state) => state.game.isInventoryOpen);
-  const isLogOpen = useSelector((state) => state.game.isLogOpen);
-  const isHelpOpen = useSelector((state) => state.game.isHelpOpen);
 
   const startGame = useCallback(() => {
     dispatch(patchGame(id, "status", "active"));
@@ -174,7 +206,7 @@ const GamePlay = () => {
           </ExitStatus>
         </GameSubHeader>
       </GameHeader>
-      {!isGameLoading && (
+      {!isGameLoading && !isInventoryOpen && !isLogOpen && !isHelpOpen && (
         <>
           <GameTextWrapper>
             {currentRoomDetail.info.map((text, index) => (
@@ -192,17 +224,40 @@ const GamePlay = () => {
             ))}
           </GameTextWrapper>
           {isResponseLoading && <SmallSpinLoader />}
-          {response.length > 0 && !isResponseLoading && (
+          {response && response.length > 0 && !isResponseLoading && (
             <GameTextWrapper>
               <PurpleText>{response}</PurpleText>
             </GameTextWrapper>
           )}
-          {response.length === 0 && !isResponseLoading && (
+          {(!response || response.length === 0) && !isResponseLoading && (
             <GameTextWrapper>
               <PurpleText>---</PurpleText>
             </GameTextWrapper>
           )}
         </>
+      )}
+      {!isGameLoading && isInventoryOpen && (
+        <ExtrasWrapper>
+          {buildInventory(player.inventory).map((item, i) => (
+            <ExtrasTextWrapper key={i} border>
+              <GreenText>{item.count ? `${item.name}:` : item.name}</GreenText>
+              {item.count && <PurpleText>{item.count}</PurpleText>}
+            </ExtrasTextWrapper>
+          ))}
+        </ExtrasWrapper>
+      )}
+      {!isGameLoading && isLogOpen && (
+        <ExtrasWrapper>
+          {player.log.map((l, i) => (
+            <ExtrasTextWrapper key={i} border={true} column={true}>
+              <ExtrasTextWrapper>
+                <PurpleText>{`Date: ${l.time}`}</PurpleText>
+                <PurpleText>{`Input: ${l.input}`}</PurpleText>
+              </ExtrasTextWrapper>
+              <GreenText>{l.message}</GreenText>
+            </ExtrasTextWrapper>
+          ))}
+        </ExtrasWrapper>
       )}
       {isGameLoading && <SmallSpinLoader />}
       <GameFooter>

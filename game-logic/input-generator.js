@@ -131,13 +131,13 @@ class ValidInput {
       string.indexOf(" ") === -1
         ? string.toUpperCase()
         : string.slice(string.lastIndexOf(" ") + 1).toUpperCase();
-    if (!this.validWord(firstWord) && ! this.validWord(lastWord)) {
-      return false
+    if (!this.validWord(firstWord) && !this.validWord(lastWord)) {
+      return false;
     } else {
       return {
         firstWord: firstWord,
-        lastWord: lastWord
-      }
+        lastWord: lastWord,
+      };
     }
   }
   //determines the return output of each valid entry
@@ -202,7 +202,7 @@ class ValidInput {
         } else if (obj.lastWord === "INSPECT") {
           return "insp";
         } else {
-          return "not_sure"
+          return "not_sure";
         }
       } else if (obj.firstWord === "CHECK" && obj.lastWord === "ROOM") {
         return "insp";

@@ -63,7 +63,18 @@ const generateRoomInventoryString = (room) => {
   }
 };
 
+export const determineLogMessage = (action) => {
+  if (action.action === "change-room") {
+    return "Changed location."
+  }
+  if (action.message) {
+    return action.message
+  }
+  return "---"
+}
+
 export const determineAction = (input, room, player) => {
+  console.log(input)
   if (input === "insp") {
     return {
       action: null,
@@ -113,20 +124,20 @@ export const determineAction = (input, room, player) => {
         return {
           action: "get-item",
           value: "West Riddle Box",
-          message: "You put the West Riddle Box in your bag."
-        }
+          message: "You put the West Riddle Box in your bag.",
+        };
       } else if (room.inventory.includes("East Riddle Box")) {
         return {
           action: "get-item",
           value: "East Riddle Box",
-          message: "you put the East Riddle Box in your bag."
-        }
+          message: "you put the East Riddle Box in your bag.",
+        };
       } else {
         return {
           action: null,
           value: null,
-          message: "There are no Riddle Boxes in this room ..."
-        }
+          message: "There are no Riddle Boxes in this room ...",
+        };
       }
     }
     if (
@@ -153,26 +164,73 @@ export const determineAction = (input, room, player) => {
             : `There is no ${getItemLookup[input]} in this room ...`,
       };
     }
-  } else if (dropItems.includes(input))  {
+  } else if (dropItems.includes(input)) {
     if (input === "drop_rbox") {
       return {
         action: null,
         value: null,
-        message: "These riddle boxes look to important to drop ..."
-      }
+        message: "These riddle boxes look to important to drop ...",
+      };
     }
     if (player.inventory.includes(dropItemLookup[input])) {
       return {
         action: "drop-item",
         value: dropItemLookup[input],
-        message: `You dropped a ${dropItemLookup[input]}.`
-      }
+        message: `You dropped a ${dropItemLookup[input]}.`,
+      };
     } else {
       return {
         action: null,
         value: null,
-        message: "You can't drop an item you don't have ..."
+        message: "You can't drop an item you don't have ...",
+      };
+    }
+  } else if (useableItems.includes(input)) {
+    if (input === "use_rbox") {
+      if (player.inventory.includes("West Riddle Box") && player.inventory.includes("East Riddle Box")) {
+        return {
+          action: "choose-riddle-box",
+          value: null,
+          message: null,
+        }
+      } else if (player.inventory.includes("West Riddle Box")) {
+        return {
+          action: "use-riddle-box",
+          value: "West Riddle Box",
+          messge: null,
+        }
+      } else if (player.inventory.includes("East Riddle Box")) {
+        return {
+          action: "use-riddle-box",
+          value: "East Riddle Box",
+          message: null,
+        }
+      } else {
+        return {
+          action: null,
+          value: null,
+          message: " You don't have a riddle box to use ..."
+        }
       }
+    }
+    if (player.inventory.includes(useableItemLookup[input])) {
+      return {
+        action: "use-item",
+        value: useableItemLookup[input],
+        message: `You used a ${useableItemLookup[input]}`,
+      };
+    } else {
+      return {
+        action: null,
+        value: null,
+        message: "You can't use an item you don't have ...",
+      };
+    }
+  } else if (input === "i") {
+    return {
+      action: "toggle-inventory",
+      value: null,
+      message: null,
     }
   } else if (input === "not-sure") {
     return {

@@ -15,7 +15,6 @@ passport.deserializeUser((id, done) => {
 
 passport.use(
   new LocalStrategy({ usernameField: "username", passReqToCallback: true }, (req, username, password, done) => {
-    console.log(req.body)
     User.findOne({ username: username })
       .then((user) => {
         if (!user) {

@@ -9,6 +9,7 @@ const generatePlayer = (difficulty, name) => {
     maxHealth: difficulty === "1" ? 70 : difficulty === "2" ? 60 : 50,
     health: difficulty === "1" ? 70 : difficulty === "2" ? 60 : 50,
     inventory: [],
+    log: [{time: new Date().toLocaleTimeString(), input: "Create", message: "Game Created"}],
     attack: "Particle Beam",
     damageBase: 8,
     damageModifier: 6,
