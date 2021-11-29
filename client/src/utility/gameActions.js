@@ -65,16 +65,16 @@ const generateRoomInventoryString = (room) => {
 
 export const determineLogMessage = (action) => {
   if (action.action === "change-room") {
-    return "Changed location."
+    return "Changed location.";
   }
   if (action.message) {
-    return action.message
+    return action.message;
   }
-  return "---"
-}
+  return "---";
+};
 
 export const determineAction = (input, room, player) => {
-  console.log(input)
+  console.log(input);
   if (input === "insp") {
     return {
       action: null,
@@ -187,30 +187,33 @@ export const determineAction = (input, room, player) => {
     }
   } else if (useableItems.includes(input)) {
     if (input === "use_rbox") {
-      if (player.inventory.includes("West Riddle Box") && player.inventory.includes("East Riddle Box")) {
+      if (
+        player.inventory.includes("West Riddle Box") &&
+        player.inventory.includes("East Riddle Box")
+      ) {
         return {
           action: "choose-riddle-box",
           value: null,
           message: null,
-        }
+        };
       } else if (player.inventory.includes("West Riddle Box")) {
         return {
           action: "use-riddle-box",
           value: "West Riddle Box",
           messge: null,
-        }
+        };
       } else if (player.inventory.includes("East Riddle Box")) {
         return {
           action: "use-riddle-box",
           value: "East Riddle Box",
           message: null,
-        }
+        };
       } else {
         return {
           action: null,
           value: null,
-          message: " You don't have a riddle box to use ..."
-        }
+          message: " You don't have a riddle box to use ...",
+        };
       }
     }
     if (player.inventory.includes(useableItemLookup[input])) {
@@ -231,7 +234,19 @@ export const determineAction = (input, room, player) => {
       action: "toggle-inventory",
       value: null,
       message: null,
-    }
+    };
+  } else if (input === "toggle_log") {
+    return {
+      action: "toggle_log",
+      value: null,
+      message: null,
+    };
+  } else if (input === "d") {
+    return {
+      action: "toggle-help",
+      value: null,
+      message: null,
+    };
   } else if (input === "not-sure") {
     return {
       action: null,

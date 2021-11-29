@@ -83,6 +83,7 @@ class ValidInput {
       "OPEN",
       "RUN",
       "CHECK",
+      "LOG",
     ];
     this.intObjects = [
       "SIGN",
@@ -201,6 +202,8 @@ class ValidInput {
           return "insp";
         } else if (obj.lastWord === "INSPECT") {
           return "insp";
+        } else if (obj.lastWord === "LOG") {
+          return "toggle_log";
         } else {
           return "not_sure";
         }
@@ -240,6 +243,8 @@ class ValidInput {
         return "use_rbox";
       } else if (obj.lastWord === "CHEST") {
         return "use_chest";
+      } else if (obj.lastWord === "LOG") {
+        return "toggle_log";
       } else {
         return "open_null";
       }
@@ -434,6 +439,8 @@ class ValidInput {
         return "move_pic";
       } else if (obj.lastWord === "LETTER") {
         return "read_letter";
+      } else if (obj.lastWord === "LOG") {
+        return "toggle_log";
       } else {
         return "check_null";
       }
@@ -512,6 +519,8 @@ class ValidInput {
       } else {
         return "pu_null";
       }
+    } else if (obj.firstWord === "LOG" || obj.lastWord === "LOG") {
+      return "toggle_log";
     } else if (
       this.instructions.includes(obj.firstWord) ||
       this.instructions.includes(obj.lastWord)

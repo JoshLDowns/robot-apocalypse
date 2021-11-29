@@ -6,7 +6,10 @@ import {
   updateGame,
   getValidInput,
 } from "../../api/gameApi";
-import { determineAction, determineLogMessage } from "../../utility/gameActions";
+import {
+  determineAction,
+  determineLogMessage,
+} from "../../utility/gameActions";
 
 let initialState = {
   isLoading: false,
@@ -314,6 +317,12 @@ export const getInput = (input, room, player) => async (dispatch) => {
       }
       if (currentAction.action === "toggle-inventory") {
         dispatch(setInventoryOpen());
+      }
+      if (currentAction.action === "toggle_log") {
+        dispatch(setLogOpen());
+      }
+      if (currentAction.action === "toggle-help") {
+        dispatch(setHelpOpen());
       }
       dispatch(setResponse({ response: currentAction.message }));
       if (!currentAction.action.includes("toggle")) {
